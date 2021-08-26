@@ -9,11 +9,13 @@ import javax.ws.rs.core.MediaType;
 
 @Path("/testservice")
 public class TestService {
+
+
  
   @GET
   @Produces(MediaType.TEXT_PLAIN)
   public String getTestService(@QueryParam("name") String name) {
-    return "Hello "+name+"! This is coming from webservice!";
+    return "Hello "+name+"! This is coming from webservice! "+Repository.sqlQuery("SHOW tables");
   }
   
 }
