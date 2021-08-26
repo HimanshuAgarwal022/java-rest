@@ -1,2 +1,2 @@
 # java-rest
-JAVA REST API service using Jakarta Service, MySQL and Wildfly Server.
+JAVA REST API service using Jakarta specification, MySQL and Wildfly Server.
