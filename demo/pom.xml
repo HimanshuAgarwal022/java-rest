@@ -11,7 +11,6 @@
 
   <name>demo Maven Webapp</name>
  
-
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>11</maven.compiler.source>
@@ -19,21 +18,32 @@
   </properties>
 
   <dependencies>
+
+  <!-- Jersey Servlet -->
   <dependency>
     <groupId>org.glassfish.jersey.containers</groupId>
     <artifactId>jersey-container-servlet</artifactId>
     <version>2.27</version>
   </dependency>
+  <dependency>
+    <groupId>org.glassfish.jersey.media</groupId>
+    <artifactId>jersey-media-json-binding</artifactId>
+    <version>2.34</version>
+  </dependency>
+
+
   <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
   <dependency>
     <groupId>mysql</groupId>
     <artifactId>mysql-connector-java</artifactId>
     <version>8.0.26</version>
   </dependency>
+
+  <!-- https://mvnrepository.com/artifact/org.json/json -->
   <dependency>
-    <groupId>org.glassfish.jersey.media</groupId>
-    <artifactId>jersey-media-json-binding</artifactId>
-    <version>2.34</version>
+    <groupId>org.json</groupId>
+    <artifactId>json</artifactId>
+    <version>20210307</version>
   </dependency>
 
   </dependencies>

@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import java.sql.SQLException;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -24,28 +26,44 @@ public class TestService {
   @Path("/cart")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getCart() {
-    String ans = Repository.getCart();
+    String ans;
+    try {
+      ans = Repository.getCart();
+    } catch (SQLException e) {
+      SqlExceptionMapper exceptionMapper = new SqlExceptionMapper();
+      return exceptionMapper.toResponse(new SqlException(new SqlExceptionInfo(e.getMessage(), e.getSQLState(), e.getErrorCode())));
+    }
     return Response.status(200).entity(ans).build();
   }
 
   @POST
   @Path("/cart/add/")
   @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.TEXT_PLAIN)
+  @Produces(MediaType.APPLICATION_JSON)
   public Response addItem(Item item){
     if(item == null){
       return Response.status(400).entity("Missing item details. ").build();
     }
-    Repository.addItem(item);
+    try {
+      Repository.addItem(item);
+    } catch (SQLException e) {
+      SqlExceptionMapper exceptionMapper = new SqlExceptionMapper();
+      return exceptionMapper.toResponse(new SqlException(new SqlExceptionInfo(e.getMessage(), e.getSQLState(), e.getErrorCode())));
+    }
     String result = "Item added to cart : " + item.getName() + " Quantity : " + item.getQuantity();
     return Response.status(200).entity(result).build();
   }
 
   @DELETE
   @Path("/cart/delete/")
-  @Produces(MediaType.TEXT_PLAIN)
+  @Produces(MediaType.APPLICATION_JSON)
   public Response deleteItemById(@QueryParam("id") int id) {
-    Repository.deleteItemById(id);
+    try {
+      Repository.deleteItemById(id);
+    } catch (SQLException e) {
+      SqlExceptionMapper exceptionMapper = new SqlExceptionMapper();
+      return exceptionMapper.toResponse(new SqlException(new SqlExceptionInfo(e.getMessage(), e.getSQLState(), e.getErrorCode())));
+    }
     return Response.status(200).entity("Item with id: "+id+" deleted.").build();
   }
 
