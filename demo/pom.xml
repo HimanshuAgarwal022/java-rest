@@ -25,10 +25,13 @@
     <artifactId>jersey-container-servlet</artifactId>
     <version>2.27</version>
   </dependency>
+
+  
+ <!-- https://mvnrepository.com/artifact/javax.json.bind/javax.json.bind-api -->
   <dependency>
-    <groupId>org.glassfish.jersey.media</groupId>
-    <artifactId>jersey-media-json-binding</artifactId>
-    <version>2.34</version>
+    <groupId>javax.json.bind</groupId>
+    <artifactId>javax.json.bind-api</artifactId>
+    <version>1.0</version>
   </dependency>
 
 

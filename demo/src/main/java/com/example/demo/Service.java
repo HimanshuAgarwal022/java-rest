@@ -13,7 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/api")
-public class TestService {
+public class Service{
 
   @GET
   @Path("/greet")
