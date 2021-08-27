@@ -1,0 +1,17 @@
+<Context>
+    <Resource
+      name="jdbc/myDB"
+      auth="Container"
+      type="javax.sql.DataSource"
+      maxActive="25"
+      maxIdle="10"
+      maxWait="10000"
+      removeAbandoned="true"
+      removeAbandonedTimeout="300"
+      defaultAutoCommit="true"
+      username="root"
+      password="admin"
+      driverClassName="com.mysql.jdbc.Driver"
+      jndi-name="jdbc/myDB"
+      url="jdbc:mysql://localhost:3306/restdb" />
+</Context>
