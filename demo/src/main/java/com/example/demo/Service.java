@@ -2,6 +2,7 @@ package com.example.demo;
 
 import java.sql.SQLException;
 
+import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -12,8 +13,19 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+
+
 @Path("/api")
 public class Service{
+
+  static{
+    try {
+      InitContext.setupInitialContext();
+    } catch (NamingException e) {
+      Response.status(500).entity(e.getMessage()).build();
+    }
+  }
+
 
   @GET
   @Path("/greet")
@@ -32,6 +44,8 @@ public class Service{
     } catch (SQLException e) {
       SqlExceptionMapper exceptionMapper = new SqlExceptionMapper();
       return exceptionMapper.toResponse(new SqlException(new SqlExceptionInfo(e.getMessage(), e.getSQLState(), e.getErrorCode())));
+    } catch (NamingException e) {
+      return Response.status(500).entity(e.getMessage()).build();
     }
     return Response.status(200).entity(ans).build();
   }
@@ -49,6 +63,8 @@ public class Service{
     } catch (SQLException e) {
       SqlExceptionMapper exceptionMapper = new SqlExceptionMapper();
       return exceptionMapper.toResponse(new SqlException(new SqlExceptionInfo(e.getMessage(), e.getSQLState(), e.getErrorCode())));
+    } catch (NamingException e) {
+      return Response.status(500).entity(e.getMessage()).build();
     }
     String result = "Item added to cart : " + item.getName() + " Quantity : " + item.getQuantity();
     return Response.status(200).entity(result).build();
@@ -63,9 +79,12 @@ public class Service{
     } catch (SQLException e) {
       SqlExceptionMapper exceptionMapper = new SqlExceptionMapper();
       return exceptionMapper.toResponse(new SqlException(new SqlExceptionInfo(e.getMessage(), e.getSQLState(), e.getErrorCode())));
+    } catch (NamingException e) {
+      return Response.status(500).entity(e.getMessage()).build();
     }
     return Response.status(200).entity("Item with id: "+id+" deleted.").build();
   }
 
-  
+
 }
+

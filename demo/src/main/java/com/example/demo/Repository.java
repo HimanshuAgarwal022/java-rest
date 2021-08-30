@@ -2,7 +2,9 @@ package com.example.demo;
 
 import java.sql.*;
 
+import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import org.json.JSONArray;
@@ -11,19 +13,12 @@ public class Repository {
     
     private static Connection conn = null;
 
-    private static void init() throws SQLException {
-        //conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/restdb?" + "user=root&password=admin");
-        InitialContext ctx;
+    private static void init() throws SQLException, NamingException {
+        Context ctx;
         DataSource ds;
-        try {
-            ctx = new InitialContext();
-            ds = (DataSource) ctx.lookup("java:comp/env/jdbc/myDB");
-            conn = ds.getConnection();
-            //ds = (DataSource) ctx.lookup("jdbc/MySQLDataSource");
-        } catch (Exception e){
-            System.out.println("Connection issue.");
-        }
-
+        ctx = new InitialContext();
+        ds = (DataSource) ctx.lookup("jdbc/mysqldb");
+        conn = ds.getConnection();
         String sql = "CREATE TABLE IF NOT EXISTS cart ( \n" +
         "  id INT NOT NULL PRIMARY KEY , \n" +
         "  name VARCHAR(100) NOT NULL , \n" +
@@ -35,7 +30,7 @@ public class Repository {
 
     }
 
-    public static String getCart() throws SQLException {
+    public static String getCart() throws SQLException, NamingException {
         Statement stmt = null;
         ResultSet rs = null;
         String res = "";
@@ -73,7 +68,7 @@ public class Repository {
         return res;
     }
 
-    public static void deleteItemById(int id) throws SQLException {
+    public static void deleteItemById(int id) throws SQLException, NamingException {
         PreparedStatement preparedStatement = null;
         init();
 
@@ -102,7 +97,7 @@ public class Repository {
         }
     }
 
-    public static void addItem(Item item) throws SQLException {
+    public static void addItem(Item item) throws SQLException, NamingException {
         PreparedStatement preparedStatement = null;
         init();
 
