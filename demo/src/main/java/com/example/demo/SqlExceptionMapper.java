@@ -13,8 +13,7 @@ public class SqlExceptionMapper implements ExceptionMapper<SqlException> {
 
     @Override
     @Produces(MediaType.APPLICATION_JSON)
-    public Response toResponse (SqlException e) {
-
+    public Response toResponse (SqlException e){
         ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
 
         rb.entity(e.getError());

@@ -4,43 +4,42 @@ import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 
-//import javax.json.bind.annotation.JsonbProperty;
-import javax.json.bind.annotation.JsonbPropertyOrder;
-
-
-@JsonbPropertyOrder({"id", "name", "quantity"})
 public class Item {
+
     @NotNull
-    private int id;
+    private int productId;
     @NotNull
-    private String name;
+    private String productName;
     @NotNull
     private int quantity;
+    @NotNull
+    private int userId;
 
     public Item() {
         super();
     }
 
-    public Item(int id, String name, int quantity) {
-        this.id = id;
-        this.name = name;
+    public Item(int productId, String productName, int quantity, int userId) {
+        this.productId = productId;
+        this.productName = productName;
         this.quantity = quantity;
+        this.userId = userId;
     }
 
-    public int getId() {
-        return this.id;
+    public int getProductId() {
+        return this.productId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
 
-    public String getName() {
-        return this.name;
+    public String getProductName() {
+        return this.productName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
     public int getQuantity() {
@@ -51,6 +50,34 @@ public class Item {
         this.quantity = quantity;
     }
 
+    public int getUserId() {
+        return this.userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public Item productId(int productId) {
+        setProductId(productId);
+        return this;
+    }
+
+    public Item productName(String productName) {
+        setProductName(productName);
+        return this;
+    }
+
+    public Item quantity(int quantity) {
+        setQuantity(quantity);
+        return this;
+    }
+
+    public Item userId(int userId) {
+        setUserId(userId);
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -59,20 +86,21 @@ public class Item {
             return false;
         }
         Item item = (Item) o;
-        return id == item.id && Objects.equals(name, item.name) && quantity == item.quantity;
+        return productId == item.productId && Objects.equals(productName, item.productName) && quantity == item.quantity && userId == item.userId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, quantity);
+        return Objects.hash(productId, productName, quantity, userId);
     }
 
     @Override
     public String toString() {
         return "{" +
-            " id='" + getId() + "'" +
-            ", name='" + getName() + "'" +
+            " productId='" + getProductId() + "'" +
+            ", productName='" + getProductName() + "'" +
             ", quantity='" + getQuantity() + "'" +
+            ", userId='" + getUserId() + "'" +
             "}";
     }
 

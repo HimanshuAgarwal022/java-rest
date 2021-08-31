@@ -1,10 +1,6 @@
 package com.example.demo;
 
 import java.util.Objects;
-
-import javax.json.bind.annotation.JsonbPropertyOrder;
-
-@JsonbPropertyOrder({ "message", "state", "errorCode" })
 public class SqlExceptionInfo {
     private String message;
     private String state;

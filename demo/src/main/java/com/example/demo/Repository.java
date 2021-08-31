@@ -20,9 +20,11 @@ public class Repository {
         ds = (DataSource) ctx.lookup("jdbc/mysqldb");
         conn = ds.getConnection();
         String sql = "CREATE TABLE IF NOT EXISTS cart ( \n" +
-        "  id INT NOT NULL PRIMARY KEY , \n" +
-        "  name VARCHAR(100) NOT NULL , \n" +
-        "  quantity INT NOT NULL \n" +
+        "  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY , \n" +
+        "  productId INT NOT NULL , \n" +
+        "  productName VARCHAR(100) NOT NULL , \n" +
+        "  quantity INT NOT NULL , \n" +
+        "  userId INT NOT NULL \n" +
         ");";
 
         Statement stmt = conn.createStatement();
@@ -101,11 +103,12 @@ public class Repository {
         PreparedStatement preparedStatement = null;
         init();
 
-        String statement = "INSERT INTO cart ( id , name , quantity ) VALUES ( ? , ? , ? ); ";
+        String statement = "INSERT INTO cart ( productId , productName , quantity, userId ) VALUES ( ? , ? , ? , ? ); ";
         preparedStatement = conn.prepareStatement(statement) ;
-        preparedStatement.setInt( 1 , item.getId() );
-        preparedStatement.setString( 2 , item.getName() );
+        preparedStatement.setInt( 1 , item.getProductId() );
+        preparedStatement.setString( 2 , item.getProductName() );
         preparedStatement.setInt( 3 , item.getQuantity() );
+        preparedStatement.setInt( 4 , item.getUserId() );
         preparedStatement.executeUpdate();
 
         if (preparedStatement != null) {

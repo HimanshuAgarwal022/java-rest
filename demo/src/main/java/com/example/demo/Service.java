@@ -14,7 +14,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 
-
 @Path("/api")
 public class Service{
 
@@ -55,9 +54,7 @@ public class Service{
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response addItem(Item item){
-    if(item == null){
-      return Response.status(400).entity("Missing item details. ").build();
-    }
+    String result = "";
     try {
       Repository.addItem(item);
     } catch (SQLException e) {
@@ -66,8 +63,9 @@ public class Service{
     } catch (NamingException e) {
       return Response.status(500).entity(e.getMessage()).build();
     }
-    String result = "Item added to cart : " + item.getName() + " Quantity : " + item.getQuantity();
+    result = "Item added to cart : " + item.getProductName() + " Quantity : " + item.getQuantity() + " UserID: " + item.getUserId();
     return Response.status(200).entity(result).build();
+    
   }
 
   @DELETE
