@@ -55,6 +55,22 @@ public class Service{
     return Response.status(200).entity(ans).build();
   }
 
+  @GET
+  @Path("/users")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getUsers() {
+    String ans;
+    try {
+      ans = Repository.getUsers();
+    } catch (SQLException e) {
+      SqlExceptionMapper exceptionMapper = new SqlExceptionMapper();
+      return exceptionMapper.toResponse(new SqlException(new SqlExceptionInfo(e.getMessage(), e.getSQLState(), e.getErrorCode())));
+    } catch (NamingException e) {
+      return Response.status(500).entity(e.getMessage()).build();
+    }
+    return Response.status(200).entity(ans).build();
+  }
+
   @POST
   @Path("/cart/add/")
   @Consumes(MediaType.APPLICATION_JSON)
@@ -84,6 +100,27 @@ public class Service{
     
   }
 
+  @POST
+  @Path("/users/add/")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response addUser(@QueryParam("userName") String userName){
+
+    String result = "";
+
+    try {
+      Repository.addUser(userName);
+    } catch (SQLException e) {
+      SqlExceptionMapper exceptionMapper = new SqlExceptionMapper();
+      return exceptionMapper.toResponse(new SqlException(new SqlExceptionInfo(e.getMessage(), e.getSQLState(), e.getErrorCode())));
+    } catch (NamingException e) {
+      return Response.status(500).entity(e.getMessage()).build();
+    }
+    result = "User with Name: " + userName + " added. ";
+    
+    return Response.status(200).entity(result).build();
+    
+  }
+
   @DELETE
   @Path("/cart/delete/")
   @Produces(MediaType.APPLICATION_JSON)
@@ -97,6 +134,21 @@ public class Service{
       return Response.status(500).entity(e.getMessage()).build();
     }
     return Response.status(200).entity("Item with id: "+id+" deleted.").build();
+  }
+
+  @DELETE
+  @Path("/users/delete/")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response deleteUserById(@QueryParam("userId") int userId) {
+    try {
+      Repository.deleteUserById(userId);
+    } catch (SQLException e) {
+      SqlExceptionMapper exceptionMapper = new SqlExceptionMapper();
+      return exceptionMapper.toResponse(new SqlException(new SqlExceptionInfo(e.getMessage(), e.getSQLState(), e.getErrorCode())));
+    } catch (NamingException e) {
+      return Response.status(500).entity(e.getMessage()).build();
+    }
+    return Response.status(200).entity("User with userId: "+userId+" deleted.").build();
   }
 
 
