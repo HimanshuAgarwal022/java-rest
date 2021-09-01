@@ -151,6 +151,43 @@ public class Service{
     return Response.status(200).entity("User with userId: "+userId+" deleted.").build();
   }
 
+  @POST
+  @Path("/users/checkout/")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response checkout(@QueryParam("userId") int userId){
+
+    String result = "";
+
+    try {
+      Repository.checkout(userId);
+    } catch (SQLException e) {
+      SqlExceptionMapper exceptionMapper = new SqlExceptionMapper();
+      return exceptionMapper.toResponse(new SqlException(new SqlExceptionInfo(e.getMessage(), e.getSQLState(), e.getErrorCode())));
+    } catch (NamingException e) {
+      return Response.status(500).entity(e.getMessage()).build();
+    }
+    result = "Checkout successful for User with Id: " + userId + ". ";
+    
+    return Response.status(200).entity(result).build();
+    
+  }
+
+  @GET
+  @Path("/activityLog")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getActivityLog() {
+    String ans;
+    try {
+      ans = Repository.getActivityLog();
+    } catch (SQLException e) {
+      SqlExceptionMapper exceptionMapper = new SqlExceptionMapper();
+      return exceptionMapper.toResponse(new SqlException(new SqlExceptionInfo(e.getMessage(), e.getSQLState(), e.getErrorCode())));
+    } catch (NamingException e) {
+      return Response.status(500).entity(e.getMessage()).build();
+    }
+    return Response.status(200).entity(ans).build();
+  }
+
 
 }
 

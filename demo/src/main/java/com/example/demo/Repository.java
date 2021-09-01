@@ -7,6 +7,8 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import com.google.gson.Gson;
+
 import org.json.JSONArray;
 
 public class Repository {
@@ -48,6 +50,26 @@ public class Repository {
         stmt = conn.createStatement();
         stmt.execute(sql2);
 
+        String sql3 = "CREATE TABLE IF NOT EXISTS activityLog ( \n" +
+        "  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY , \n" +
+        "  userId INT NOT NULL , \n" +
+        "  productId INT NOT NULL , \n" +
+        "  productName VARCHAR(100) NOT NULL , \n" +
+        "  quantity INT NOT NULL, \n" +
+        "  loggedAt DATETIME DEFAULT CURRENT_TIMESTAMP \n" +
+        ");";
+
+        if (stmt != null) {
+            try {
+                stmt.close();
+            } catch (SQLException sqlEx) { } // ignore
+
+            stmt = null;
+        }
+
+        stmt = conn.createStatement();
+        stmt.execute(sql3);
+
         if (stmt != null) {
             try {
                 stmt.close();
@@ -86,6 +108,46 @@ public class Repository {
 
             stmt = null;
         }
+
+        if (conn != null) {
+            try {
+                conn.close();
+            } catch (SQLException sqlEx) { } // ignore
+
+            conn = null;
+        }
+        return res;
+    }
+
+    public static String getActivityLog() throws SQLException, NamingException {
+        Statement stmt = null;
+        ResultSet rs = null;
+        String res = "";
+
+        init();
+
+        stmt = conn.createStatement();
+        rs = stmt.executeQuery("SELECT * FROM activityLog;");
+        rs = stmt.getResultSet();
+        JSONArray response = ResultSetJsonMapper.convert(rs);
+        res = response.toString();
+
+        if (rs != null) {
+            try {
+                rs.close();
+            } catch (SQLException sqlEx) { } // ignore
+
+            rs = null;
+        }
+
+        if (stmt != null) {
+            try {
+                stmt.close();
+            } catch (SQLException sqlEx) { } // ignore
+
+            stmt = null;
+        }
+
         if (conn != null) {
             try {
                 conn.close();
@@ -132,35 +194,6 @@ public class Repository {
             conn = null;
         }
         return res;
-    }
-
-    public static void deleteItemById(int id) throws SQLException, NamingException {
-        PreparedStatement preparedStatement = null;
-        init();
-
-        String sql = "DELETE FROM cart " +
-        "WHERE id = ?";
-        preparedStatement = conn.prepareStatement(sql);
-        preparedStatement.setInt( 1 , id );
-        int deleted = preparedStatement.executeUpdate();
-        if (deleted == 0) {
-            throw new SQLException("No item with the given id: "+Integer.toString(id)+" exists.", Integer.toString(02000));
-        }
-
-        if (preparedStatement != null) {
-            try {
-                preparedStatement.close();
-            } catch (SQLException sqlEx) { } // ignore
-
-            preparedStatement = null;
-        }
-        if (conn != null) {
-            try {
-                conn.close();
-            } catch (SQLException sqlEx) { } // ignore
-
-            conn = null;
-        }
     }
 
     public static void addItem(Item item) throws SQLException, NamingException {
@@ -278,5 +311,119 @@ public class Repository {
         }
 
     }
+
+    public static void deleteItemById(int id) throws SQLException, NamingException {
+        PreparedStatement preparedStatement = null;
+        init();
+
+        String sql = "DELETE FROM cart " +
+        "WHERE id = ?";
+        preparedStatement = conn.prepareStatement(sql);
+        preparedStatement.setInt( 1 , id );
+        int deleted = preparedStatement.executeUpdate();
+        if (deleted == 0) {
+            throw new SQLException("No item with the given id: "+Integer.toString(id)+" exists.", Integer.toString(02000));
+        }
+
+        if (preparedStatement != null) {
+            try {
+                preparedStatement.close();
+            } catch (SQLException sqlEx) { } // ignore
+
+            preparedStatement = null;
+        }
+        if (conn != null) {
+            try {
+                conn.close();
+            } catch (SQLException sqlEx) { } // ignore
+
+            conn = null;
+        }
+    }
+
+    public static void checkout(int userId) throws SQLException, NamingException {
+
+        init();
+        try{
+            conn.setAutoCommit(false);
+            PreparedStatement preparedStatement = null;
+            String sql = "SELECT * FROM cart WHERE userId = ?";
+            preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setInt( 1 , userId );
+            ResultSet resultSet = preparedStatement.executeQuery();
+            JSONArray response = ResultSetJsonMapper.convert(resultSet);
+            Item[] items = new Gson().fromJson(response.toString(), Item[].class);
+            
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException sqlEx) { } // ignore
+    
+                preparedStatement = null;
+            }
+
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException sqlEx) { } // ignore
+    
+                resultSet = null;
+            }
+
+            for(Item item: items){
+                String sqladd = "INSERT INTO activityLog ( userId , productId, productName , quantity ) VALUES ( ? , ? , ? , ? ); ";
+                preparedStatement = conn.prepareStatement(sqladd);
+                preparedStatement.setInt( 1 , userId );
+                preparedStatement.setInt( 2 , item.getProductId() );
+                preparedStatement.setString( 3 , item.getProductName() );
+                preparedStatement.setInt( 4 , item.getQuantity() );
+                preparedStatement.executeUpdate();
+
+                if (preparedStatement != null) {
+                    try {
+                        preparedStatement.close();
+                    } catch (SQLException sqlEx) { } // ignore
+        
+                    preparedStatement = null;
+                }
+                
+            }
+
+            String sqldelete = "DELETE FROM cart " +
+            "WHERE userId = ?";
+            preparedStatement = conn.prepareStatement(sqldelete);
+            preparedStatement.setInt( 1 , userId );
+            int deleted = preparedStatement.executeUpdate();
+            if (deleted == 0) {
+                //Ignore
+            }
+
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException sqlEx) { } // ignore
+
+                preparedStatement = null;
+            }
+
+            // if everything is OK, commit the transaction
+            conn.commit();
+         
+        } catch(SQLException e) {
+            // in case of exception, rollback the transaction
+            conn.rollback();
+            throw new SQLException(e);
+        }
+
+        if (conn != null) {
+            try {
+                conn.close();
+            } catch (SQLException sqlEx) { } // ignore
+
+            conn = null;
+        }
+
+    }
+
 
 }
