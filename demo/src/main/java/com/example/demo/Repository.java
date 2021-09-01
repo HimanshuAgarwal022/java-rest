@@ -15,7 +15,7 @@ public class Repository {
     
     private static Connection conn = null;
 
-    private static void init() throws SQLException, NamingException {
+    protected static void init() throws SQLException, NamingException {
         Context ctx;
         DataSource ds;
         ctx = new InitialContext();
@@ -85,8 +85,6 @@ public class Repository {
         ResultSet rs = null;
         String res = "";
 
-        init();
-
         stmt = conn.createStatement();
         rs = stmt.executeQuery("SELECT * FROM cart;");
         rs = stmt.getResultSet();
@@ -123,8 +121,6 @@ public class Repository {
         Statement stmt = null;
         ResultSet rs = null;
         String res = "";
-
-        init();
 
         stmt = conn.createStatement();
         rs = stmt.executeQuery("SELECT * FROM activityLog;");
@@ -163,8 +159,6 @@ public class Repository {
         ResultSet rs = null;
         String res = "";
 
-        init();
-
         stmt = conn.createStatement();
         rs = stmt.executeQuery("SELECT * FROM users;");
         rs = stmt.getResultSet();
@@ -198,7 +192,6 @@ public class Repository {
 
     public static void addItem(Item item) throws SQLException, NamingException {
         PreparedStatement preparedStatement = null;
-        init();
 
         String statement = "INSERT INTO cart ( productId , productName , quantity, userId ) VALUES ( ? , ? , ? , ? ); ";
         preparedStatement = conn.prepareStatement(statement) ;
@@ -226,7 +219,6 @@ public class Repository {
 
     public static void addUser(String userName) throws SQLException, NamingException {
         PreparedStatement preparedStatement = null;
-        init();
 
         String statement = "INSERT INTO users ( userName ) VALUES ( ? ); ";
         preparedStatement = conn.prepareStatement(statement) ;
@@ -251,7 +243,6 @@ public class Repository {
 
     public static void deleteUserById(int userId) throws SQLException, NamingException {
         PreparedStatement preparedStatement = null;
-        init();
 
         String sql = "DELETE FROM users " +
         "WHERE userId = ?";
@@ -284,7 +275,6 @@ public class Repository {
 
     public static void deleteItemsByUserId(int userId) throws SQLException, NamingException {
         PreparedStatement preparedStatement = null;
-        init();
 
         String sql = "DELETE FROM cart " +
         "WHERE userId = ?";
@@ -314,7 +304,6 @@ public class Repository {
 
     public static void deleteItemById(int id) throws SQLException, NamingException {
         PreparedStatement preparedStatement = null;
-        init();
 
         String sql = "DELETE FROM cart " +
         "WHERE id = ?";
@@ -343,7 +332,6 @@ public class Repository {
 
     public static void checkout(int userId) throws SQLException, NamingException {
 
-        init();
         try{
             conn.setAutoCommit(false);
             PreparedStatement preparedStatement = null;
