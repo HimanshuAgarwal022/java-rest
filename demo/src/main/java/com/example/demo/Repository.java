@@ -226,7 +226,40 @@ public class Repository {
         preparedStatement.setInt( 1 , userId );
         int deleted = preparedStatement.executeUpdate();
         if (deleted == 0) {
-            throw new SQLException("No item with the given id: "+Integer.toString(userId)+" exists.", Integer.toString(02000));
+            throw new SQLException("No user with the given id: "+Integer.toString(userId)+" exists.", Integer.toString(02000));
+        }
+
+        if (preparedStatement != null) {
+            try {
+                preparedStatement.close();
+            } catch (SQLException sqlEx) { } // ignore
+
+            preparedStatement = null;
+        }
+
+        if (conn != null) {
+            try {
+                conn.close();
+            } catch (SQLException sqlEx) { } // ignore
+
+            conn = null;
+        }
+
+        deleteItemsByUserId(userId);
+
+    }
+
+    public static void deleteItemsByUserId(int userId) throws SQLException, NamingException {
+        PreparedStatement preparedStatement = null;
+        init();
+
+        String sql = "DELETE FROM cart " +
+        "WHERE userId = ?";
+        preparedStatement = conn.prepareStatement(sql);
+        preparedStatement.setInt( 1 , userId );
+        int deleted = preparedStatement.executeUpdate();
+        if (deleted == 0) {
+            //Ignore
         }
 
         if (preparedStatement != null) {
@@ -243,6 +276,7 @@ public class Repository {
 
             conn = null;
         }
+
     }
 
 }
