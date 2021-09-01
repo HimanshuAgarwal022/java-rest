@@ -23,15 +23,31 @@
   <dependency>
     <groupId>org.glassfish.jersey.containers</groupId>
     <artifactId>jersey-container-servlet</artifactId>
-    <version>2.27</version>
+    <version>2.34</version>
   </dependency>
 
-<!-- Jersey DI and core-->
+  <!-- https://mvnrepository.com/artifact/javax.validation/validation-api -->
+  <dependency>
+    <groupId>javax.validation</groupId>
+    <artifactId>validation-api</artifactId>
+    <version>2.0.1.Final</version>
+  </dependency>
+
+  <!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
+  <dependency>
+    <groupId>javax.ws.rs</groupId>
+    <artifactId>javax.ws.rs-api</artifactId>
+    <version>2.1.1</version>
+  </dependency>
+
+  <!-- Jersey DI and core-->
+  <!-- https://mvnrepository.com/artifact/org.glassfish.jersey.inject/jersey-hk2 -->
   <dependency>
     <groupId>org.glassfish.jersey.inject</groupId>
     <artifactId>jersey-hk2</artifactId>
     <version>2.28</version>
   </dependency>
+
 
   <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
   <dependency>
@@ -54,19 +70,11 @@
     <version>1.4</version>
   </dependency>
 
-  <!-- Using Jackson for POJO Mapping-->
-  <!-- https://mvnrepository.com/artifact/org.glassfish.jersey.media/jersey-media-json-jackson -->
+  <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
   <dependency>
-    <groupId>org.glassfish.jersey.media</groupId>
-    <artifactId>jersey-media-json-jackson</artifactId>
-    <version>3.0.2</version>
-  </dependency>
-
-  <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.jaxrs/jackson-jaxrs-json-provider -->
-  <dependency>
-    <groupId>com.fasterxml.jackson.jaxrs</groupId>
-    <artifactId>jackson-jaxrs-json-provider</artifactId>
-    <version>2.13.0-rc2</version>
+    <groupId>com.google.code.gson</groupId>
+    <artifactId>gson</artifactId>
+    <version>2.8.8</version>
   </dependency>
 
   </dependencies>

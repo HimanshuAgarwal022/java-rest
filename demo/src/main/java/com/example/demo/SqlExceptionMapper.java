@@ -8,6 +8,8 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
+import com.google.gson.Gson;
+
 @Provider
 public class SqlExceptionMapper implements ExceptionMapper<SqlException> {
 
@@ -16,7 +18,8 @@ public class SqlExceptionMapper implements ExceptionMapper<SqlException> {
     public Response toResponse (SqlException e){
         ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
 
-        rb.entity(e.getError());
+
+        rb.entity(new Gson().toJson(e.getError()));
         return rb.build();   
     }
 }

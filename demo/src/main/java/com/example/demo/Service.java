@@ -1,5 +1,9 @@
 package com.example.demo;
 
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.io.InputStreamReader;
 import java.sql.SQLException;
 
 import javax.naming.NamingException;
@@ -12,6 +16,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import com.google.gson.Gson;
 
 
 @Path("/api")
@@ -53,8 +59,17 @@ public class Service{
   @Path("/cart/add/")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public Response addItem(Item item){
+  public Response addItem(InputStream input){
+
     String result = "";
+    Reader reader;
+    try {
+      reader = new InputStreamReader(input, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      return Response.status(500).entity(e.getMessage()).build();
+    }
+    Item item = new Gson().fromJson(reader, Item.class);
+
     try {
       Repository.addItem(item);
     } catch (SQLException e) {
@@ -64,6 +79,7 @@ public class Service{
       return Response.status(500).entity(e.getMessage()).build();
     }
     result = "Item added to cart : " + item.getProductName() + " Quantity : " + item.getQuantity() + " UserID: " + item.getUserId();
+    
     return Response.status(200).entity(result).build();
     
   }
