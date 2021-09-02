@@ -28,10 +28,9 @@ public class Service{
       InitContext.setupInitialContext();
       Repository.init();
     } catch (NamingException e) {
-      Response.status(500).entity(e.getMessage()).build();
+      System.err.println(e.toString());
     } catch (SQLException e) {
-      SqlExceptionMapper exceptionMapper = new SqlExceptionMapper();
-      exceptionMapper.toResponse(new SqlException(new SqlExceptionInfo(e.getMessage(), e.getSQLState(), e.getErrorCode())));
+      System.err.println(e.toString());
     }
   }
 

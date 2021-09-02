@@ -14,13 +14,15 @@ import org.json.JSONArray;
 public class Repository {
     
     private static Connection conn = null;
+    private static Context ctx;
+    private static DataSource ds;
 
     protected static void init() throws SQLException, NamingException {
-        Context ctx;
-        DataSource ds;
+
         ctx = new InitialContext();
         ds = (DataSource) ctx.lookup("jdbc/mysqldb");
         conn = ds.getConnection();
+
         String sql = "CREATE TABLE IF NOT EXISTS cart ( \n" +
         "  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY , \n" +
         "  productId INT NOT NULL , \n" +
@@ -85,6 +87,8 @@ public class Repository {
         ResultSet rs = null;
         String res = "";
 
+        conn = ds.getConnection();
+
         stmt = conn.createStatement();
         rs = stmt.executeQuery("SELECT * FROM cart;");
         rs = stmt.getResultSet();
@@ -121,6 +125,8 @@ public class Repository {
         Statement stmt = null;
         ResultSet rs = null;
         String res = "";
+
+        conn = ds.getConnection();
 
         stmt = conn.createStatement();
         rs = stmt.executeQuery("SELECT * FROM activityLog;");
@@ -159,6 +165,8 @@ public class Repository {
         ResultSet rs = null;
         String res = "";
 
+        conn = ds.getConnection();
+
         stmt = conn.createStatement();
         rs = stmt.executeQuery("SELECT * FROM users;");
         rs = stmt.getResultSet();
@@ -193,6 +201,8 @@ public class Repository {
     public static void addItem(Item item) throws SQLException, NamingException {
         PreparedStatement preparedStatement = null;
 
+        conn = ds.getConnection();
+
         String statement = "INSERT INTO cart ( productId , productName , quantity, userId ) VALUES ( ? , ? , ? , ? ); ";
         preparedStatement = conn.prepareStatement(statement) ;
         preparedStatement.setInt( 1 , item.getProductId() );
@@ -220,6 +230,8 @@ public class Repository {
     public static void addUser(String userName) throws SQLException, NamingException {
         PreparedStatement preparedStatement = null;
 
+        conn = ds.getConnection();
+
         String statement = "INSERT INTO users ( userName ) VALUES ( ? ); ";
         preparedStatement = conn.prepareStatement(statement) ;
         preparedStatement.setString( 1 , userName );
@@ -243,6 +255,8 @@ public class Repository {
 
     public static void deleteUserById(int userId) throws SQLException, NamingException {
         PreparedStatement preparedStatement = null;
+
+        conn = ds.getConnection();
 
         String sql = "DELETE FROM users " +
         "WHERE userId = ?";
@@ -276,6 +290,8 @@ public class Repository {
     public static void deleteItemsByUserId(int userId) throws SQLException, NamingException {
         PreparedStatement preparedStatement = null;
 
+        conn = ds.getConnection();
+
         String sql = "DELETE FROM cart " +
         "WHERE userId = ?";
         preparedStatement = conn.prepareStatement(sql);
@@ -305,6 +321,8 @@ public class Repository {
     public static void deleteItemById(int id) throws SQLException, NamingException {
         PreparedStatement preparedStatement = null;
 
+        conn = ds.getConnection();
+
         String sql = "DELETE FROM cart " +
         "WHERE id = ?";
         preparedStatement = conn.prepareStatement(sql);
@@ -331,6 +349,8 @@ public class Repository {
     }
 
     public static void checkout(int userId) throws SQLException, NamingException {
+
+        conn = ds.getConnection();
 
         try{
             conn.setAutoCommit(false);
