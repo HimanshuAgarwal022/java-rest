@@ -1,4 +1,0 @@
-
-<jboss-web>
-    <security-domain>web-security-domain</security-domain>
-</jboss-web>   

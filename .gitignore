@@ -1,13 +1,14 @@
 # Compiled class file
 *.class
 
-.vscode/*
+.vscode/
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
 *.code-workspace
 */target/*
+demo/bin
 
 # Local History for Visual Studio Code
 .history/
@@ -29,6 +30,7 @@
 *.zip
 *.tar.gz
 *.rar
+*.classpath
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
