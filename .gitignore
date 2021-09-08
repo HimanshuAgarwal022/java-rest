@@ -9,6 +9,8 @@
 *.code-workspace
 */target/*
 demo/bin
+demo/.project
+demo/.settings/
 
 # Local History for Visual Studio Code
 .history/
