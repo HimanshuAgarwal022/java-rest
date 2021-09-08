@@ -19,7 +19,6 @@ import javax.ws.rs.core.Response;
 
 import com.google.gson.Gson;
 
-
 @Path("/api")
 public class Service{
 
